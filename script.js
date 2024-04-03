@@ -7,8 +7,13 @@ let users = [
     id: "1",
     password: "123",
     name: "User1",
-    group: "Group1",
-    category: "Category1",
+    Description: "Neki Opis 1",
+    groupName: "Group1",
+    category: {
+      createdAt: "Neko vreme",
+      amount: "Neka Vrednost",
+      action: "Neka Akcija",
+    },
   },
   {
     id: "2",

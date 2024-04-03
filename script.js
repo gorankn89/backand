@@ -1,8 +1,11 @@
 const express = require("express");
+const cors = require("cors"); // Add this line
 const app = express();
 const path = require("path");
+app.use(cors()); // Add this line
+
 app.use(express.static(path.join(__dirname, "build")));
-const port = 3001;
+const port = 3100;
 
 let users = [
   {

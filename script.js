@@ -7,12 +7,26 @@ let users = [
     id: "1",
     password: "123",
     name: "User1",
-    Description: "Neki Opis 1",
+    description: "Neki Opis 1",
     groupName: "Group1",
-    category: {
-      createdAt: "Neko vreme",
+    expense: {
+      description: "Neko vreme",
       amount: "Neka Vrednost",
-      action: "Neka Akcija",
+      expenseGroup: "Neka Akcija",
+    },
+    incomeGroup: {
+      name: "Neko ime",
+      description: "Neki opis",
+    },
+    income: {
+      description: "nesto opisano",
+      amount: "Neka Suma",
+      incomeGroup: "Neka grupa",
+    },
+    reminder: {
+      reminderDay: "Neki dan",
+      type: "tip",
+      active: "Neka aktivna sta god",
     },
   },
   {

@@ -12,6 +12,7 @@ let users = [
     id: "1",
     password: "123",
     name: "User1",
+    user: "Test Testovic",
     description: "Neki Opis 1",
     groupName: "Group1",
     expense: {
@@ -19,14 +20,13 @@ let users = [
       amount: "Neka Vrednost",
       expenseGroup: "Neka Akcija",
     },
-    incomeGroup: {
-      name: "Neko ime",
-      description: "Neki opis",
-    },
     income: {
       description: "nesto opisano",
       amount: "Neka Suma",
-      incomeGroup: "Neka grupa",
+      incomeGroup: {
+        name: ["Prvi income"],
+        description: ["Test prvog income"],
+      },
     },
     reminder: {
       reminderDay: "Neki dan",
@@ -44,37 +44,39 @@ let users = [
   // Add more users as needed
 ];
 // Globalna autorizacija i find funkcija
-
-let user = false;
-function findUser(id, password) {
-  users.find((user) => {
-    user = false;
-    console.log(user.id === id);
+user = "";
+function findUser(name, password) {
+  user = "";
+  console.log(name);
+  console.log(password);
+  user = users.find((user) => {
+    console.log(user.name === name);
     console.log(user.password === password);
-    return user.id === id && user.password === password;
+    return user.name === name && user.password === password;
   });
 }
 
 app.get("/users", (req, res) => {
-  const id = req.query.id;
+  const name = req.query.name;
   const password = req.query.password;
-  // Now you can use the id and password for further processing
-  // For example, you might want to find the user with this id and password
-  findUser(id, password);
+  // Now you can use the name and password for further processing
+  // For example, you might want to find the user with this name and password
+  findUser(name, password);
   console.log(user);
+  let idPassName = { id: user.id, name: user.name, password: userr.password };
   if (user) {
-    res.json(user);
+    res.json(idPassName);
   } else {
     res.status(404).json({ message: "User not found" });
   }
 });
-
+//GET EXPENSE
 app.get("/expense", (req, res) => {
-  const id = req.query.id;
+  const name = req.query.name;
   const password = req.query.password;
-  // Now you can use the id and password for further processing
-  // For example, you might want to find the user with this id and password
-  findUser(id, password);
+  // Now you can use the name and password for further processing
+  // For example, you might want to find the user with this name and password
+  findUser(name, password);
 
   console.log(user);
   if (user) {
@@ -83,6 +85,93 @@ app.get("/expense", (req, res) => {
     res.status(401).json({ message: "User not autorized" });
   }
 });
+
+//GET INCOME
+app.get("/income", (req, res) => {
+  const name = req.query.name;
+  const password = req.query.password;
+  // Now you can use the name and password for further processing
+  // For example, you might want to find the user with this name and password
+  findUser(name, password);
+
+  console.log(user);
+  if (user) {
+    res.json(user.income);
+  } else {
+    res.status(401).json({ message: "User not autorized" });
+  }
+});
+
+//GET INCOME Group
+app.get("/incomegroup", (req, res) => {
+  const name = req.query.name;
+  const password = req.query.password;
+  // Now you can use the name and password for further processing
+  // For example, you might want to find the user with this name and password
+  findUser(name, password);
+
+  console.log(user);
+  if (user) {
+    res.json(user.income.incomeGroup);
+  } else {
+    res.status(401).json({ message: "User not autorized" });
+  }
+});
+
+// POST /createuser to register a new user
+app.post("/createuser", (req, res) => {
+  const { password, name } = req.body;
+
+  // You would typically validate the input and then create the user
+  // For example, check if the user already exists, hash the password, etc.
+  const userCreationStatus = createUser(password, name);
+
+  if (userCreationStatus.success) {
+    res.status(201).json({ message: "User created successfully" });
+  } else {
+    res.status(400).json({ message: userCreationStatus.error });
+  }
+});
+
+// Function to create a new user
+function createUser(password, name) {
+  let createUser = {
+    id: users[users.length + 1].id + 1,
+    password: "123",
+    name: "User1",
+    user: "Test Testovic",
+    description: "Neki Opis 1",
+    groupName: "Group1",
+    expense: {
+      description: "Neko vreme",
+      amount: "Neka Vrednost",
+      expenseGroup: "Neka Akcija",
+    },
+    income: {
+      description: "nesto opisano",
+      amount: "Neka Suma",
+      incomeGroup: {
+        name: ["Prvi income"],
+        description: ["Test prvog income"],
+      },
+    },
+    reminder: {
+      reminderDay: "Neki dan",
+      type: "tip",
+      active: "Neka aktivna sta god",
+    },
+  };
+  users.push(createUser);
+
+  if (true) {
+    return { success: true };
+  } else {
+    return {
+      success: false,
+      error: "An error message if something goes wrong",
+    };
+  }
+}
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

@@ -43,17 +43,21 @@ let users = [
   },
   // Add more users as needed
 ];
+// Globalna autorizacija i find funkcija
+
+const user = users.find((user) => {
+  user = false;
+  console.log(user.id === id);
+  console.log(user.password === password);
+  return user.id === id && user.password === password;
+});
 
 app.get("/users", (req, res) => {
   const id = req.query.id;
   const password = req.query.password;
   // Now you can use the id and password for further processing
   // For example, you might want to find the user with this id and password
-  const user = users.find((user) => {
-    console.log(user.id === id);
-    console.log(user.password === password);
-    return user.id === id && user.password === password;
-  });
+
   console.log(user);
   if (user) {
     res.json(user);
@@ -61,6 +65,21 @@ app.get("/users", (req, res) => {
     res.status(404).json({ message: "User not found" });
   }
 });
+
+app.get("/expense", (req, res) => {
+  const id = req.query.id;
+  const password = req.query.password;
+  // Now you can use the id and password for further processing
+  // For example, you might want to find the user with this id and password
+
+  console.log(user);
+  if (user) {
+    res.json(user.expense);
+  } else {
+    res.status(401).json({ message: "User not autorized" });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

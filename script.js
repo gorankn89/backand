@@ -45,19 +45,22 @@ let users = [
 ];
 // Globalna autorizacija i find funkcija
 
-const user = users.find((user) => {
-  user = false;
-  console.log(user.id === id);
-  console.log(user.password === password);
-  return user.id === id && user.password === password;
-});
+let user = false;
+function findUser(id, password) {
+  users.find((user) => {
+    user = false;
+    console.log(user.id === id);
+    console.log(user.password === password);
+    return user.id === id && user.password === password;
+  });
+}
 
 app.get("/users", (req, res) => {
   const id = req.query.id;
   const password = req.query.password;
   // Now you can use the id and password for further processing
   // For example, you might want to find the user with this id and password
-
+  findUser(id, password);
   console.log(user);
   if (user) {
     res.json(user);
@@ -71,6 +74,7 @@ app.get("/expense", (req, res) => {
   const password = req.query.password;
   // Now you can use the id and password for further processing
   // For example, you might want to find the user with this id and password
+  findUser(id, password);
 
   console.log(user);
   if (user) {

@@ -119,6 +119,7 @@ app.get("/incomegroup", (req, res) => {
 });
 
 // POST /createuser to register a new user
+// Express route to create a new user
 app.post("/createuser", (req, res) => {
   const { password, name } = req.body;
 
@@ -129,49 +130,65 @@ app.post("/createuser", (req, res) => {
   if (userCreationStatus.success) {
     res.status(201).json({ message: "User created successfully" });
   } else {
-    res.status(400).json({ message: userCreationStatus.error });
+    res.status(400).json({ error: userCreationStatus.error });
   }
 });
 
 // Function to create a new user
 function createUser(password, name) {
-  let createUser = {
-    id: users[users.length + 1].id + 1,
-    password: "123",
-    name: "User1",
-    user: "Test Testovic",
-    description: "Neki Opis 1",
-    groupName: "Group1",
-    expense: {
-      description: "Neko vreme",
-      amount: "Neka Vrednost",
-      expenseGroup: "Neka Akcija",
-    },
-    income: {
-      description: "nesto opisano",
-      amount: "Neka Suma",
-      incomeGroup: {
-        name: ["Prvi income"],
-        description: ["Test prvog income"],
-      },
-    },
-    reminder: {
-      reminderDay: "Neki dan",
-      type: "tip",
-      active: "Neka aktivna sta god",
-    },
-  };
-  users.push(createUser);
+  const existingUser = users.find((user) => user.name === name);
 
-  if (true) {
-    return { success: true };
-  } else {
+  if (existingUser) {
     return {
       success: false,
-      error: "An error message if something goes wrong",
+      error: "User already exists. Please choose a different name.",
     };
+  } else {
+    const newUser = {
+      id: users.length + 1,
+      password: password,
+      name: name,
+      user: "Test Testovic",
+      description: "Neki Opis 1",
+      groupName: "Group1",
+      expense: {
+        description: "Neko vreme",
+        amount: "Neka Vrednost",
+        expenseGroup: "Neka Akcija",
+      },
+      income: {
+        description: "nesto opisano",
+        amount: "Neka Suma",
+        incomeGroup: {
+          name: ["Prvi income"],
+          description: ["Test prvog income"],
+        },
+      },
+      reminder: {
+        reminderDay: "Neki dan",
+        type: "tip",
+        active: "Neka aktivna sta god",
+      },
+    };
+
+    users.push(newUser);
+    return { success: true };
   }
 }
+
+// REMOVING USERS
+
+app.delete("/users/:id", (req, res) => {
+  const { id } = req.params;
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index !== -1) {
+    users.splice(index, 1);
+    res.status(200).send({ message: "User removed successfully." });
+  } else {
+    res.status(404).send({ message: "User not found." });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
